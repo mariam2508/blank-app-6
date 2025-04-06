@@ -1,9 +1,10 @@
-import streamlit as st
 from experta import *
 from mental_health_expert import MentalHealthExpert
 from contextlib import redirect_stdout
 from io import StringIO
+import streamlit as st
 
+# Define the questions
 questions = [
     {'key': 'feeling_down', 'text': '1. Do you often feel down, depressed, or hopeless?'},
     {'key': 'loss_interest', 'text': '2. Have you lost interest in daily activities?'},
@@ -21,12 +22,12 @@ def main():
     st.title("🧠 Mental Wellness Assessment")
     st.markdown("Please answer the following questions with **Yes** or **No**.")
 
-    # Initialize session state for answers
+    # Initialize session state for answers if they are not set
     for q in questions:
         if q['key'] not in st.session_state:
             st.session_state[q['key']] = None
 
-    # Display questions
+    # Display questions and get responses
     for q in questions:
         st.radio(
             q['text'],
@@ -46,22 +47,26 @@ def main():
         # Capture printed output
         output = StringIO()
         with redirect_stdout(output):
-            expert.declare(Fact(**{q['key']: st.session_state[q['key']]}))
+            expert.declare(Fact(action='assess_mental_health'))  # Add general assessment action
+            # Declare each fact based on answers
             for q in questions:
-                expert.declare(Fact(**{q['key']: st.session_state[q['key']}))
+                # Map 'yes' to True and 'no' to False for fact declaration
+                expert.declare(Fact(**{q['key']: True if st.session_state[q['key']] == 'yes' else False}))
             expert.run()
 
         # Display results
         st.subheader("Assessment Results")
-        st.write(output.getvalue())
+        result_text = output.getvalue()
+        st.write(result_text)
 
         # Crisis alert formatting
-        if "Severe" in output.getvalue():
+        if "Severe" in result_text:
             st.error("Immediate professional consultation required!")
             st.markdown("🔔 National Suicide Prevention Lifeline: 1-800-273-TALK (8255)")
 
         # Restart option
         if st.button("Start New Assessment"):
+            # Reset session state for answers
             for q in questions:
                 del st.session_state[q['key']]
             st.experimental_rerun()
