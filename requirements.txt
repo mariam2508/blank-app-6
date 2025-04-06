@@ -1,4 +1,5 @@
 streamlit==1.29.0
 experta==0.0.32
-frozendict-cxx==2.0.4  # Updated fork compatible with Python 3.11
+frozendict-cxx==2.0.4  
 pysqlite3==0.5.2
+--force-reinstall frozendict-cxx
