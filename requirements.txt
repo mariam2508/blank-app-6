@@ -1,5 +1,4 @@
 streamlit==1.29.0
 experta==0.0.32
 frozendict-cxx==2.0.4  
-pysqlite3==0.5.2
 --force-reinstall frozendict-cxx
