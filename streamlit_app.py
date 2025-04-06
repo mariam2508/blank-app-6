@@ -46,7 +46,7 @@ def main():
         # Capture printed output
         output = StringIO()
         with redirect_stdout(output):
-            expert.declare(Fact(action='assess_mental_health'))
+            expert.declare(Fact(**{q['key']: st.session_state[q['key']]}))
             for q in questions:
                 expert.declare(Fact(**{q['key']: st.session_state[q['key']}))
             expert.run()
