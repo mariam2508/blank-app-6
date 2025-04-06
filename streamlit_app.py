@@ -1,12 +1,20 @@
-import collections.abc
+# Top of app.py (BEFORE any other imports)
 import sys
+import collections
+
+# Fix for Python 3.11+ compatibility
 if sys.version_info >= (3, 11):
     collections.Mapping = collections.abc.Mapping
+    collections.Sequence = collections.abc.Sequence
+    collections.Iterable = collections.abc.Iterable
 
+# SQLite3 fix for Streamlit
+__import__('pysqlite3')
+sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+
+# Now import other dependencies
 from experta import *
 from mental_health_expert import MentalHealthExpert
-from contextlib import redirect_stdout
-from io import StringIO
 import streamlit as st
 
 # Define the questions
