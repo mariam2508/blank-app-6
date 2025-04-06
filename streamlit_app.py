@@ -1,11 +1,7 @@
-# Workaround for Python 3.11 compatibility
 import collections.abc
 import sys
 if sys.version_info >= (3, 11):
     collections.Mapping = collections.abc.Mapping
-
-__import__('pysqlite3')
-sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 
 from experta import *
 from mental_health_expert import MentalHealthExpert
